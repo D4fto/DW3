@@ -1,0 +1,51 @@
+
+@url = http://localhost:3000
+
+GET {{url}}/tarefas
+
+###
+
+# Buscando tarefas por Query String (Filtro)
+GET {{url}}/tarefas?busca=estudar
+
+###
+
+POST {{url}}/tarefas
+Content-Type: application/json
+
+{
+  "id": 4,
+  "descricao": "Tarefa 4",
+  "concluido": false
+}
+
+###
+
+GET {{url}}/tarefas/1
+
+###
+
+PATCH {{url}}/tarefas/1
+Content-Type: application/json
+
+{
+  "descricao": "Fazer compras no mercado",
+  "concluido": true
+}
+
+###
+
+PATCH {{url}}/tarefas/1/concluir
+
+###
+
+GET {{url}}/tarefas/resumo
+
+###
+
+DELETE {{url}}/tarefas/1
+
+###
+
+# Forçando erro 404 no NotFoundHandler
+GET {{url}}/batata-frita
