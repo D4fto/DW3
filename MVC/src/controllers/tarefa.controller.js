@@ -5,6 +5,7 @@ import {
   criar,
   gerarResumo,
   listar,
+  listarPendentes,
   remover,
 } from "../models/tarefa.model.js";
 
@@ -27,7 +28,24 @@ export async function criarTarefa(request, reply) {
   const { descricao } = request.body;
 
   const novaTarefa = await criar(descricao);
+
+  if(!novaTarefa){
+    reply.status(400).send({
+      status: "error",
+      message: "A descrição da tarefa é obrigatória",
+    })
+  }
   return reply.status(201).send(novaTarefa);
+}
+
+// Processa requisições da rota `GET /tarefas/pendentes`
+export async function obterPendentes(request, reply) {
+  // LOG para indicar que a função foi chamada
+  console.log("Controller: obterPendentes chamado");
+
+  const pendentes = await listarPendentes();
+
+  return reply.send(pendentes);
 }
 
 // Processa requisições da rota `GET /tarefas/resumo`

@@ -6,6 +6,7 @@ import {
   atualizarTarefa,
   concluirTarefa,
   removerTarefa,
+  obterPendentes,
 } from "../controllers/tarefa.controller.js";
 
 export async function tarefaRoutes(server, options) {
@@ -32,6 +33,13 @@ export async function tarefaRoutes(server, options) {
     obterResumo(request, reply);
   });
 
+  server.get("/tarefas/pendentes", async (request, reply) => {
+    // LOG para indicar que a rota foi chamada
+    console.log("Routes: GET /tarefas/pendentes chamada");
+    // Chama a função do controlador para processar a requisição
+    obterPendentes(request, reply);
+  });
+  
   server.get("/tarefas/:id", async (request, reply) => {
     // LOG para indicar que a rota foi chamada
     console.log("Routes: GET /tarefas/:id chamada");

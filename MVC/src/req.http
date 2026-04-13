@@ -43,6 +43,10 @@ GET {{url}}/tarefas/resumo
 
 ###
 
+GET {{url}}/tarefas/pendentes
+
+###
+
 DELETE {{url}}/tarefas/1
 
 ###

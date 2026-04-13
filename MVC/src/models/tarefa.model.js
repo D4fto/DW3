@@ -4,6 +4,7 @@ const tarefas = [
   { id: 3, descricao: "Estudar Fastify", concluido: true },
 ];
 
+
 // Função para listar todas as tarefas. Ela pode receber opções de filtro, como busca por descrição ou filtro por status de conclusão.
 export async function listar(opcoes) {
   console.log("Model: listar chamado");
@@ -23,15 +24,13 @@ if (concluido !== undefined) {
 
 return resultado;
 }
+
 // Função para criar uma nova tarefa. Ela recebe a descrição da tarefa como parâmetro e retorna a tarefa criada.
 export async function criar(descricao) {
   console.log("Model: criar chamado");
 
   if (!descricao || descricao.trim() === "") {
-    return reply.status(400).send({
-      status: "error",
-      message: "A descrição da tarefa é obrigatória",
-    });
+    return null;
   }
   const novoId = tarefas.length > 0 ? tarefas[tarefas.length - 1].id + 1 : 1;
   const novaTarefa = { id: novoId, descricao, concluido: false };
@@ -100,4 +99,12 @@ export async function gerarResumo() {
     concluidas,
     pendentes,
   };
+}
+
+// Função para listar todas as tarefas pendentes.
+export async function listarPendentes() {
+  console.log("Model: listarPendentes chamado");
+  
+  const pendentes = tarefas.filter((t) => t.concluido === false);
+  return pendentes
 }
