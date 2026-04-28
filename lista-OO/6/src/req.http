@@ -1,0 +1,61 @@
+
+@url = http://localhost:3000
+
+GET {{url}}/produtos
+
+###
+
+GET {{url}}/produtos/1
+
+###
+
+POST {{url}}/produtos
+Content-Type: application/json
+
+{ 
+  "nome": "Teclado", 
+  "preco": 200 
+}
+
+###
+
+POST {{url}}/produtos
+Content-Type: application/json
+
+{
+
+}
+
+###
+
+POST {{url}}/produtos
+Content-Type: application/json
+
+{ 
+  "nome": "", 
+  "preco": -5 
+}
+
+###
+
+POST {{url}}/produtos
+Content-Type: application/json
+
+{ 
+  "nome": " ", 
+  "preco": 200 
+}
+
+###
+
+POST {{url}}/produtos
+Content-Type: application/json
+
+{ 
+  "nome": "Mouse", 
+  "preco": -5 
+}
+
+###
+
+DELETE {{url}}/produtos/1
