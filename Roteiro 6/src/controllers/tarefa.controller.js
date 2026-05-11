@@ -1,23 +1,15 @@
 // @file: src/controllers/tarefa.controller.js
 
-import model from '../models/tarefa.model.js'
-
 class TarefaController {
-  constructor() {
-    this.model = model
+  constructor(service) {      // ← recebe o service de fora
+    this.service = service
   }
 
   async listarTarefas(request, reply) {
     console.log("Controller: listarTarefas chamado")
     const { busca, concluido } = request.query
-    const resultado = await this.model.listar({ busca, concluido })
+    const resultado = await this.service.listar({ busca, concluido })
     return reply.send(resultado)
-  }
-  
-  async obterPendentes(request, reply) {
-    console.log("Controller: obterPendentes chamado")
-    const pendentes = await this.model.listarPendentes()
-    return reply.send(pendentes)
   }
 
   async criarTarefa(request, reply) {
@@ -29,14 +21,14 @@ class TarefaController {
         message: 'A descrição da tarefa é obrigatória'
       })
     }
-    const novaTarefa = await this.model.criar(descricao)
+    const novaTarefa = await this.service.criar(descricao)
     return reply.status(201).send(novaTarefa)
   }
 
   async obterTarefa(request, reply) {
     console.log("Controller: obterTarefa chamado")
     const id = Number(request.params.id)
-    const tarefa = await this.model.buscarPorId(id)
+    const tarefa = await this.service.buscarPorId(id)
     if (!tarefa) {
       return reply.status(404).send({ status: 'error', message: 'Tarefa não encontrada' })
     }
@@ -46,7 +38,7 @@ class TarefaController {
   async atualizarTarefa(request, reply) {
     console.log("Controller: atualizarTarefa chamado")
     const id = Number(request.params.id)
-    const tarefa = await this.model.atualizar(id, request.body)
+    const tarefa = await this.service.atualizar(id, request.body)
     if (!tarefa) {
       return reply.status(404).send({ status: 'error', message: 'Tarefa não encontrada' })
     }
@@ -56,7 +48,7 @@ class TarefaController {
   async concluirTarefa(request, reply) {
     console.log("Controller: concluirTarefa chamado")
     const id = Number(request.params.id)
-    const tarefa = await this.model.alternarConcluido(id)
+    const tarefa = await this.service.alternarConcluido(id)
     if (!tarefa) {
       return reply.status(404).send({ status: 'error', message: 'Tarefa não encontrada' })
     }
@@ -66,7 +58,7 @@ class TarefaController {
   async removerTarefa(request, reply) {
     console.log("Controller: removerTarefa chamado")
     const id = Number(request.params.id)
-    const removido = await this.model.remover(id)
+    const removido = await this.service.remover(id)
     if (!removido) {
       return reply.status(404).send({ status: 'error', message: 'Tarefa não encontrada' })
     }
@@ -75,9 +67,9 @@ class TarefaController {
 
   async obterResumo(request, reply) {
     console.log("Controller: obterResumo chamado")
-    const resumo = await this.model.obterResumo()
+    const resumo = await this.service.obterResumo()
     return reply.send(resumo)
   }
 }
 
-export default new TarefaController()
+export default TarefaController
