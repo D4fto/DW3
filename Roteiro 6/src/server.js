@@ -3,7 +3,7 @@
 import Fastify from 'fastify'
 import cors from '@fastify/cors'
 
-import tarefaRoutes from './routes/tarefa.routes.js'
+import tarefaRoutes from './routes/tarefa.route.js'
 import TarefaRepository from './repositories/tarefa.repository.js'
 import TarefaService from './services/tarefa.service.js'
 import TarefaController from './controllers/tarefa.controller.js'
