@@ -12,6 +12,12 @@ class TarefaController {
     return reply.send(resultado)
   }
 
+  async obterPendentes(request, reply) {
+    console.log("Controller: obterPendentes chamado")
+    const resultado = await this.service.listarPendentes()
+    return reply.send(resultado)
+  }
+
   async criarTarefa(request, reply) {
     console.log("Controller: criarTarefa chamado")
     const { descricao } = request.body

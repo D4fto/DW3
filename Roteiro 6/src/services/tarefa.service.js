@@ -25,6 +25,11 @@ class TarefaService {
     return resultado
   }
 
+  async listarPendentes(){
+    console.log("Service: listarPendentes chamado")
+    return await this.repository.buscarPendentes()
+  }
+
   async criar(descricao) {
     console.log("Service: criar chamado")
     const novaTarefa = await this.repository.salvar({ descricao, concluido: false })

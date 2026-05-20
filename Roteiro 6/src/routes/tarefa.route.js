@@ -8,6 +8,11 @@ export default async function tarefaRoutes(server, options) {
     return await controller.listarTarefas(request, reply)
   })
 
+  server.get('/tarefas/pendentes', async (request, reply) => {
+    console.log("Routes: GET /tarefas/pendentes chamada")
+    return await controller.obterPendentes(request, reply)
+  })
+
   server.post('/tarefas', async (request, reply) => {
     console.log("Routes: POST /tarefas chamada")
     return await controller.criarTarefa(request, reply)
