@@ -21,8 +21,12 @@ export class TarefaController {
   }
 
   async criar(request, reply) {
-    const tarefa = await this.service.criarTarefa(request.body)
-    return reply.status(201).send(tarefa)
+    const { descricao, projetoId } = request.body
+    const novaTarefa = await this.service.criar({
+      descricao,
+      projetoId
+    })
+    return reply.status(201).send(novaTarefa)
   }
 
   async atualizar(request, reply) {

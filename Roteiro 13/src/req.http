@@ -52,6 +52,15 @@ GET {{url}}/tarefas/pendentes
 DELETE {{url}}/tarefas/4
 
 ###
+POST {{url}}/tarefas
+Content-Type: application/json
+
+{
+  "descricao": "Criar integração entre projetos e tarefas",
+  "projetoId": 2
+}
+
+###
 
 # Forçando erro 404 no NotFoundHandler
 GET {{url}}/batata-frita

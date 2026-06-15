@@ -37,12 +37,21 @@ export class TarefaService {
     return tarefa
   }
 
-  async criarTarefa(dados) {
+  
+
+  async criar(dados) {
     if (!dados.descricao || dados.descricao.trim() === '') {
       throw new AppError('O descrição é obrigatório', 400)
     }
+    if (!dados.projetoId) {
+      throw new AppError('O Id do projeto é obrigatório', 400)
+    }
 
-    return this.repository.salvar({ ...dados, status: 'pendente' })
+    return this.repository.salvar({
+      descricao: dados.descricao,
+      concluido: false,
+      projetoId: dados.projetoId
+    })
   }
 
   async atualizarTarefa(id, dados) {
