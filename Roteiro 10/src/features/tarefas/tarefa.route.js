@@ -19,10 +19,10 @@ export default async function tarefaRoutes(server) {
   // REGISTRO DAS ROTAS
   // ==========================================
 
-  server.get('/tarefas', async (request, reply) => await controller.listar(request, reply))
-  server.post('/tarefas', async (request, reply) => await controller.criar(request, reply))
-  server.get('/tarefas/:id', async (request, reply) => await controller.buscar(request, reply))
-  server.patch('/tarefas/:id', async (request, reply) => await controller.atualizar(request, reply))
-  server.patch('/tarefas/:id/concluir', async (request, reply) => await controller.concluir(request, reply))
-  server.delete('/tarefas/:id', async (request, reply) => await controller.remover(request, reply))
+  server.get('/', async (request, reply) => await controller.listar(request, reply))
+  server.post('/', async (request, reply) => await controller.criar(request, reply))
+  server.get('/:id', async (request, reply) => await controller.buscar(request, reply))
+  server.patch('/:id', async (request, reply) => await controller.atualizar(request, reply))
+  server.patch('/:id/concluir', async (request, reply) => await controller.concluir(request, reply))
+  server.delete('/:id', async (request, reply) => await controller.remover(request, reply))
 }

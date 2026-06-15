@@ -1,48 +1,72 @@
-// @file: src/repositories/tarefa.repository.js
+import client from '../../database/client.js'
 
 class TarefaRepository {
-  constructor() {
-    this.tarefas = [
-      { id: 1, descricao: "Fazer compras", concluido: false },
-      { id: 2, descricao: "Lavar o carro", concluido: false },
-      { id: 3, descricao: "Estudar Fastify", concluido: true }
-    ]
-  }
-
   async buscarTodos() {
-    console.log("Repository: buscarTodos chamado")
-    return this.tarefas
+    const resultado = await client.query(`
+      SELECT id, descricao, concluido, criada_em
+      FROM tarefas
+      ORDER BY id
+    `)
+
+    return resultado.rows
   }
 
   async buscarPorId(id) {
-    console.log("Repository: buscarPorId chamado")
-    return this.tarefas.find(t => t.id === id) ?? null
+    const resultado = await client.query(
+      `
+        SELECT id, descricao, concluido, criada_em
+        FROM tarefas
+        WHERE id = $1
+      `,
+      [id]
+    )
+
+    return resultado.rows[0] ?? null
   }
 
   async salvar(tarefa) {
-    console.log("Repository: salvar chamado")
-    const novoId = this.tarefas.length > 0
-      ? this.tarefas[this.tarefas.length - 1].id + 1
-      : 1
-    const novaTarefa = { id: novoId, ...tarefa }
-    this.tarefas.push(novaTarefa)
-    return novaTarefa
+    const resultado = await client.query(
+      `
+        INSERT INTO tarefas (descricao, concluido)
+        VALUES ($1, $2)
+        RETURNING id, descricao, concluido, criada_em
+      `,
+      [tarefa.descricao, tarefa.concluido]
+    )
+
+    return resultado.rows[0]
   }
 
   async atualizar(id, dadosAtualizados) {
-    console.log("Repository: atualizar chamado")
-    const index = this.tarefas.findIndex(t => t.id === id)
-    if (index === -1) return null
-    this.tarefas[index] = { ...this.tarefas[index], ...dadosAtualizados, id }
-    return this.tarefas[index]
+    const tarefaAtual = await this.buscarPorId(id)
+    if (!tarefaAtual) return null
+
+    const tarefaFinal = { ...tarefaAtual, ...dadosAtualizados, id: tarefaAtual.id }
+
+    const resultado = await client.query(
+      `
+        UPDATE tarefas
+        SET descricao = $1,
+            concluido = $2
+        WHERE id = $3
+        RETURNING id, descricao, concluido, criada_em
+      `,
+      [tarefaFinal.descricao, tarefaFinal.concluido, id]
+    )
+
+    return resultado.rows[0] ?? null
   }
 
   async remover(id) {
-    console.log("Repository: remover chamado")
-    const index = this.tarefas.findIndex(t => t.id === id)
-    if (index === -1) return false
-    this.tarefas.splice(index, 1)
-    return true
+    const resultado = await client.query(
+      `
+        DELETE FROM tarefas
+        WHERE id = $1
+      `,
+      [id]
+    )
+
+    return resultado.rowCount > 0
   }
 }
 
