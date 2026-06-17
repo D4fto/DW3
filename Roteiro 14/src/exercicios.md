@@ -246,3 +246,81 @@ CREATE TABLE artigos_categorias (
 ```
 
 A tabela `artigos_categorias` é a tabela associativa responsável por armazenar os vínculos entre artigos e categorias.
+
+# Exercício 5 - (Desafio) Expondo tags na API
+
+### Quantos JOINs a query precisa?
+
+A consulta precisa de **2 JOINs**:
+
+1. `tarefas` → `tarefas_tags`
+2. `tarefas_tags` → `tags`
+
+Exemplo:
+
+```sql
+SELECT
+    t.id,
+    t.descricao,
+    t.concluido,
+    t.projeto_id,
+    tg.id AS tag_id,
+    tg.nome AS tag_nome
+FROM tarefas t
+LEFT JOIN tarefas_tags tt
+    ON tt.tarefa_id = t.id
+LEFT JOIN tags tg
+    ON tg.id = tt.tag_id
+WHERE t.id = $1;
+```
+
+### O resultado deve vir achatado ou agrupado?
+
+A consulta retorna os dados de forma **achatada**, ou seja, uma linha para cada tag associada à tarefa.
+
+Exemplo:
+
+| id | descricao | tag_id | tag_nome |
+|----|-----------|---------|----------|
+| 2 | Integrar PostgreSQL | 1 | backend |
+| 2 | Integrar PostgreSQL | 2 | postgres |
+| 2 | Integrar PostgreSQL | 3 | api |
+
+Para o frontend, é mais útil receber os dados **agrupados**, pois a tarefa aparece apenas uma vez e suas tags ficam dentro de uma lista.
+
+Exemplo:
+
+```json
+{
+  "id": 2,
+  "descricao": "Integrar PostgreSQL",
+  "concluido": false,
+  "projeto_id": 1,
+  "tags": [
+    {
+      "id": 1,
+      "nome": "backend"
+    },
+    {
+      "id": 2,
+      "nome": "postgres"
+    },
+    {
+      "id": 3,
+      "nome": "api"
+    }
+  ]
+}
+```
+
+### Onde deve ocorrer a transformação?
+
+A transformação deve ocorrer no **Repository**, pois ele é responsável por acessar o banco de dados e preparar os dados retornados pelas consultas.
+
+Dessa forma:
+
+- o **Repository** executa a query e organiza as tags;
+- o **Service** aplica regras de negócio;
+- o **Controller** apenas recebe a requisição e envia a resposta.
+
+Essa separação mantém cada camada com sua responsabilidade bem definida e facilita a manutenção do código.

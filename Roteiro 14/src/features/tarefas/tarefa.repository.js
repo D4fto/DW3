@@ -50,18 +50,32 @@ class TarefaRepository {
           t.id,
           t.descricao,
           t.concluido,
-          t.criada_em,
           t.projeto_id,
-          p.nome AS projeto_nome
+          tg.id AS tag_id,
+          tg.nome AS tag_nome
         FROM tarefas t
-        LEFT JOIN projetos p
-          ON p.id = t.projeto_id
-        WHERE t.id = $1
+        LEFT JOIN tarefas_tags tt
+          ON tt.tarefa_id = t.id
+        LEFT JOIN tags tg
+          ON tg.id = tt.tag_id
+        WHERE t.id = $1;
       `,
       [id]
     )
 
-    return resultado.rows[0] ?? null
+    if(resultado.rows.length>0){
+      const tarefa = {... resultado.rows[0]};
+      delete tarefa.tag_id;
+      delete tarefa.tag_nome;
+
+      tarefa.tags = [];
+
+      resultado.rows.map(t => tarefa.tags.push({tag_id: t.tag_id, tag_nome: t.tag_nome}));
+
+      return tarefa;
+    }
+    return null
+
   }
 
   async salvar(tarefa) {
